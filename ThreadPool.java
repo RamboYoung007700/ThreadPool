@@ -13,14 +13,14 @@ public class ThreadPool {
 	private int PoolSize = 3;
 	private Lock lock = new ReentrantLock();
 	private Condition condition = lock.newCondition();
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//¹¹ÔìÆ÷
 	public ThreadPool() {
 		for (int i = 0; i < PoolSize; i++) {
-			log("ï¿½ï¿½ï¿½ß³ï¿½"+i);
-			new Worker("ï¿½ß³ï¿½"+i).start();
+			log("Æô¶¯Ïß³Ì"+i);
+			new Worker("Ïß³Ì"+i).start();
 		}
 	}
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½
+	//´´½¨ÈÕÖ¾·½·¨
 	private static void log(String msg) {
 		System.out.printf("%s,%s,%s,%n",now(),Thread.currentThread().getName(),msg);
 	}
@@ -30,7 +30,7 @@ public class ThreadPool {
 		return new SimpleDateFormat("HH:mm:ss").format(new Date());
 	}
 
-	// ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½à£¬ï¿½ï¿½ï¿½ß³ï¿½ï¿½Ã¡ï¿½
+	// ¶¨ÒåÄÚ²¿Àà£¬¿ªÏß³ÌÓÃ¡£
 	private class Worker extends Thread {
 		Runnable task;
 
@@ -42,40 +42,41 @@ public class ThreadPool {
 			while (true) {
 				try {
 					lock.lock();
-					log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+					log("¼ÓËøÍê³É");
 					while (tasks.isEmpty()) {
-						log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ£ï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½");
+						log("ÈÎÎñÈÝÆ÷¿Õ£¬½øÈëµÈ´ý");
 						condition.await();
-						log("ï¿½ï¿½ï¿½ÚµÈ´ï¿½");
+						log("ÕýÔÚµÈ´ý");
 						}
-					log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+					log("±»»½ÐÑ");
 					task = tasks.remove(0);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} finally {
 					lock.unlock();
-					log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+					log("½âËøÍê³É");
 				}
-				log("Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+				log("Ö´ÐÐÈÎÎñ");
 				task.run();
 			}
+		}
 	}
 	
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//Ìí¼ÓÈÎÎñ
 	public void addtask(Runnable r) {
 		try {
 			lock.lock();
-			log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+			log("¼ÓËøÍê³É£¬Ìí¼ÓÈÎÎñÖÐ");
 			tasks.add(r);
-			log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+			log("ÈÎÎñÌí¼ÓÍê±Ï");
 			condition.signalAll();
-			log("ï¿½ï¿½ï¿½ÑµÈ´ï¿½ï¿½Ðµï¿½ï¿½ß³ï¿½ï¿½ï¿½");
+			log("»½ÐÑµÈ´ýÖÐµÄÏß³ÌÃÇ");
 		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+			log("ÈÎÎñÌí¼ÓÍê³É£¬½âËø£¡");
 			lock.unlock();
 		}
 	}
